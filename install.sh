@@ -4,6 +4,15 @@ if [[ ! -d "${VSIX_DIR}" ]]; then
     exit 1
 fi
 
+total=$(find "${VSIX_DIR}" -maxdepth 1 -type f -name "*.vsix" | wc -l)
+if [[ ${total} -eq 0 ]]; then
+    echo "❌ VSIX 文件夹中没有找到任何 .vsix 文件: ${VSIX_DIR}"
+    exit 1
+fi
+
+success=0
+fail=0
+
 for vsix in "${VSIX_DIR}"/*.vsix; do
     [[ ! -f "${vsix}" ]] && continue
 
@@ -17,3 +26,5 @@ for vsix in "${VSIX_DIR}"/*.vsix; do
     fi
     echo
 done
+
+echo "[$(date +%H:%M:%S)] 📊 安装结果: 成功 ${success} 个, 失败 ${fail} 个"
